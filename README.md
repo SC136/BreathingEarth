@@ -29,8 +29,10 @@ A full-bleed background video (`bad.mp4` / `good.mp4`) reflects the current stat
 ```
 BreathingEarth/
 ├── index.html   — Full app (HTML + CSS + JS, single file)
-├── bad.mp4      — Degradation-state Earth video
-├── good.mp4     — Recovery-state Earth video
+├── bad1.mp4     — Degradation video (part 1)
+├── bad2.mp4     — Degradation video (part 2)
+├── good1.mp4    — Recovery video (part 1)
+├── good2.mp4    — Recovery video (part 2)
 └── README.md
 ```
 

@@ -592,8 +592,8 @@
 
     <!-- FULL-BLEED VIDEO -->
     <div class="video-layer">
-      <video id="video" autoplay muted loop>
-        <source src="bad.mp4" type="video/mp4">
+      <video id="video" autoplay muted>
+        <source src="bad1.mp4" type="video/mp4">
       </video>
     </div>
 
@@ -694,6 +694,28 @@
     const actionBtn = $("actionBtn");
     const pauseBtn = $("pauseBtn");
     const banner = $("phaseBanner");
+
+    // ── Video Playlists ──
+    const badPlaylist  = ["bad1.mp4", "bad2.mp4"];
+    const goodPlaylist = ["good1.mp4", "good2.mp4"];
+    let currentPlaylist = badPlaylist;
+    let playlistIndex = 0;
+
+    // When a video ends, advance to the next in the playlist (loop back to first)
+    video.addEventListener("ended", () => {
+      playlistIndex = (playlistIndex + 1) % currentPlaylist.length;
+      video.src = currentPlaylist[playlistIndex];
+      video.load();
+      video.play();
+    });
+
+    function switchPlaylist(playlist) {
+      currentPlaylist = playlist;
+      playlistIndex = 0;
+      video.src = playlist[0];
+      video.load();
+      video.play();
+    }
 
     // ── State ──
     let phase = "degrading";
@@ -828,9 +850,7 @@
       banner.className = "phase-banner phase-deploying";
       banner.innerText = "DEPLOYING INTERVENTION SYSTEMS";
 
-      video.src = "good.mp4";
-      video.load();
-      video.play();
+      switchPlaylist(goodPlaylist);
 
       const steps = [
         {
@@ -869,9 +889,7 @@
         actionBtn.className = "btn btn-reset";
         actionBtn.innerText = "Reset Simulation";
         actionBtn.onclick = () => {
-          video.src = "bad.mp4";
-          video.load();
-          video.play();
+          switchPlaylist(badPlaylist);
           startSimulation();
         };
       }, 4800);
