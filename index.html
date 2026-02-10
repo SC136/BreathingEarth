@@ -7,7 +7,9 @@
   <title>BreathingEarth — Climate Intervention</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=DM+Serif+Display&display=swap"
+    rel="stylesheet">
   <style>
     :root {
       /* ── Core Palette ── */
@@ -61,7 +63,8 @@
       padding: 0;
     }
 
-    html, body {
+    html,
+    body {
       height: 100%;
       overflow: hidden;
     }
@@ -111,13 +114,11 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(
-        90deg,
-        transparent 30%,
-        rgba(6, 8, 13, 0.4) 55%,
-        rgba(6, 8, 13, 0.92) 75%,
-        var(--bg-void) 100%
-      );
+      background: linear-gradient(90deg,
+          transparent 30%,
+          rgba(6, 8, 13, 0.4) 55%,
+          rgba(6, 8, 13, 0.92) 75%,
+          var(--bg-void) 100%);
       pointer-events: none;
     }
 
@@ -138,7 +139,7 @@
       letter-spacing: -0.5px;
       line-height: 1.1;
       color: var(--text-primary);
-      text-shadow: 0 2px 40px rgba(0,0,0,0.6);
+      text-shadow: 0 2px 40px rgba(0, 0, 0, 0.6);
     }
 
     .scene-title p {
@@ -172,11 +173,13 @@
     .dashboard::-webkit-scrollbar {
       width: 3px;
     }
+
     .dashboard::-webkit-scrollbar-track {
       background: transparent;
     }
+
     .dashboard::-webkit-scrollbar-thumb {
-      background: rgba(255,255,255,0.08);
+      background: rgba(255, 255, 255, 0.08);
       border-radius: 10px;
     }
 
@@ -211,6 +214,7 @@
       border: 1px solid rgba(248, 113, 113, 0.2);
       color: var(--status-danger);
     }
+
     .phase-degrading::before {
       background: var(--status-danger);
       box-shadow: 0 0 8px var(--status-danger);
@@ -223,6 +227,7 @@
       color: var(--accent-amber);
       animation: fadeIn 0.6s ease 0.4s forwards, banner-glow 2s ease-in-out infinite;
     }
+
     .phase-deploying::before {
       background: var(--accent-amber);
       box-shadow: 0 0 8px var(--accent-amber);
@@ -234,19 +239,34 @@
       border: 1px solid rgba(52, 211, 153, 0.2);
       color: var(--status-safe);
     }
+
     .phase-recovered::before {
       background: var(--status-safe);
       box-shadow: 0 0 8px var(--status-safe);
     }
 
     @keyframes dot-pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.3;
+      }
     }
 
     @keyframes banner-glow {
-      0%, 100% { border-color: rgba(251, 191, 36, 0.2); }
-      50% { border-color: rgba(251, 191, 36, 0.45); }
+
+      0%,
+      100% {
+        border-color: rgba(251, 191, 36, 0.2);
+      }
+
+      50% {
+        border-color: rgba(251, 191, 36, 0.45);
+      }
     }
 
     /* ── HEADER ── */
@@ -303,7 +323,7 @@
     .divider {
       width: 100%;
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
       margin-bottom: var(--space-lg);
     }
 
@@ -469,7 +489,7 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, transparent 50%);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, transparent 50%);
       opacity: 0;
       transition: opacity 0.3s;
     }
@@ -489,11 +509,11 @@
 
     .btn-deploy {
       background: var(--accent-blue);
-      box-shadow: 0 2px 20px rgba(59, 130, 246, 0.25), inset 0 1px 0 rgba(255,255,255,0.1);
+      box-shadow: 0 2px 20px rgba(59, 130, 246, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
 
     .btn-deploy:hover {
-      box-shadow: 0 4px 30px rgba(59, 130, 246, 0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+      box-shadow: 0 4px 30px rgba(59, 130, 246, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15);
       transform: translateY(-1px);
     }
 
@@ -505,17 +525,26 @@
     }
 
     @keyframes pulse-glow {
-      0%, 100% { opacity: 1; box-shadow: 0 2px 20px rgba(255, 184, 0, 0.25); }
-      50% { opacity: 0.85; box-shadow: 0 4px 30px rgba(255, 184, 0, 0.45); }
+
+      0%,
+      100% {
+        opacity: 1;
+        box-shadow: 0 2px 20px rgba(255, 184, 0, 0.25);
+      }
+
+      50% {
+        opacity: 0.85;
+        box-shadow: 0 4px 30px rgba(255, 184, 0, 0.45);
+      }
     }
 
     .btn-reset {
       background: var(--accent-emerald);
-      box-shadow: 0 2px 20px rgba(52, 211, 153, 0.2), inset 0 1px 0 rgba(255,255,255,0.1);
+      box-shadow: 0 2px 20px rgba(52, 211, 153, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
 
     .btn-reset:hover {
-      box-shadow: 0 4px 30px rgba(52, 211, 153, 0.35), inset 0 1px 0 rgba(255,255,255,0.15);
+      box-shadow: 0 4px 30px rgba(52, 211, 153, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.15);
       transform: translateY(-1px);
     }
 
@@ -544,6 +573,7 @@
         opacity: 0;
         transform: translateY(20px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
@@ -551,8 +581,13 @@
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
     }
 
     /* ── RESPONSIVE ── */
@@ -562,12 +597,10 @@
       }
 
       .video-layer::after {
-        background: linear-gradient(
-          180deg,
-          transparent 30%,
-          rgba(6, 8, 13, 0.6) 60%,
-          var(--bg-void) 90%
-        );
+        background: linear-gradient(180deg,
+            transparent 30%,
+            rgba(6, 8, 13, 0.6) 60%,
+            var(--bg-void) 90%);
       }
 
       .dashboard {
@@ -679,8 +712,13 @@
       <!-- Action Buttons -->
       <div class="btn-row" id="btnRow">
         <button class="btn btn-pause" id="pauseBtn">⏸ Pause</button>
-        <button class="btn btn-deploy" id="actionBtn">Deploy Solution</button>
+        <button class="btn btn-deploy" id="actionBtn">Apply Breath Back Treatment</button>
       </div>
+
+      <!-- Copyright -->
+      <div
+        style="text-align:center; font-family:var(--font-mono); font-size:10px; letter-spacing:2px; color:var(--text-muted); margin-top:var(--space-md);">
+        © VESCOP</div>
     </div>
   </div>
 
@@ -696,17 +734,20 @@
     const banner = $("phaseBanner");
 
     // ── Video Playlists ──
-    const badPlaylist  = ["bad1.mp4", "bad2.mp4"];
+    const badPlaylist = ["bad1.mp4", "bad2.mp4"];
     const goodPlaylist = ["good1.mp4", "good2.mp4"];
     let currentPlaylist = badPlaylist;
     let playlistIndex = 0;
 
-    // When a video ends, advance to the next in the playlist (loop back to first)
+    // When a video ends, play next in playlist only if there is one
     video.addEventListener("ended", () => {
-      playlistIndex = (playlistIndex + 1) % currentPlaylist.length;
-      video.src = currentPlaylist[playlistIndex];
-      video.load();
-      video.play();
+      if (playlistIndex + 1 < currentPlaylist.length) {
+        playlistIndex++;
+        video.src = currentPlaylist[playlistIndex];
+        video.load();
+        video.play();
+      }
+      // Otherwise just stop — no looping
     });
 
     function switchPlaylist(playlist) {
@@ -830,11 +871,11 @@
       pauseBtn.classList.remove("hidden");
       pauseBtn.innerText = "⏸ Pause";
       actionBtn.className = "btn btn-deploy";
-      actionBtn.innerText = "Deploy Solution";
+      actionBtn.innerText = "Apply Breath Back Treatment";
       actionBtn.onclick = deployAction;
 
       applyDegradation(currentYear);
-      simTimer = setInterval(tick, 1500);
+      simTimer = setInterval(tick, 889);
     }
 
     // ── Phase: Deploy ──
@@ -854,21 +895,21 @@
 
       const steps = [
         {
-          delay: 800,
+          delay: 2000,
           bars: [25, 30, 28, 40],
           statuses: ["Reducing", "Declining", "Stabilizing", "Capturing"],
           temp: 2.8, color: "#FBBF24",
           log: "&gt; Plasma reactors activated. Decomposing SF₆ &amp; HFCs..."
         },
         {
-          delay: 2300,
+          delay: 7000,
           bars: [18, 22, 20, 32],
           statuses: ["Dropping", "Decreasing", "Recovering", "Filtering"],
           temp: 2.3, color: "#38BDF8",
           log: "&gt; DAC units online. Atmospheric CO₂ extraction at scale...<br>&gt; Methane capture systems engaged."
         },
         {
-          delay: 3800,
+          delay: 12000,
           bars: [10, 15, 18, 25],
           statuses: ["Neutralized", "Declining", "Stabilized", "Captured"],
           temp: 1.62, color: "#34D399",
@@ -892,7 +933,7 @@
           switchPlaylist(badPlaylist);
           startSimulation();
         };
-      }, 4800);
+      }, 16000);
     }
 
     // ── Pause / Resume ──
@@ -904,7 +945,7 @@
         pauseBtn.innerText = "▶ Resume";
       } else {
         pauseBtn.innerText = "⏸ Pause";
-        simTimer = setInterval(tick, 1500);
+        simTimer = setInterval(tick, 889);
       }
     };
 
