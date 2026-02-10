@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Climate Intervention Dashboard</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #0b0f1a;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      color: #e6e9f0;
+    }
+
+    /* ── LAYOUT ── */
+    .container {
+      display: flex;
+      height: 100vh;
+    }
+
+    /* ── VIDEO ── */
+    .video-panel {
+      flex: 1;
+      background: #000;
+      position: relative;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ── DASHBOARD ── */
+    .dashboard {
+      flex: 1;
+      padding: 36px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: linear-gradient(180deg, #111827, #0b0f1a);
+      overflow-y: auto;
+    }
+
+    /* ── PHASE BANNER ── */
+    .phase-banner {
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 24px;
+      transition: all 0.5s ease;
+    }
+
+    .phase-degrading {
+      background: rgba(255, 60, 60, 0.12);
+      border: 1px solid rgba(255, 60, 60, 0.3);
+      color: #ff6b6b;
+    }
+
+    .phase-deploying {
+      background: rgba(255, 180, 0, 0.12);
+      border: 1px solid rgba(255, 180, 0, 0.3);
+      color: #ffb700;
+      animation: pulse-glow 1.2s ease-in-out infinite;
+    }
+
+    .phase-recovered {
+      background: rgba(76, 209, 55, 0.12);
+      border: 1px solid rgba(76, 209, 55, 0.3);
+      color: #4cd137;
+    }
+
+    @keyframes pulse-glow {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.6;
+      }
+    }
+
+    /* ── HEADER ── */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .year-label {
+      font-size: 11px;
+      letter-spacing: 2px;
+      opacity: 0.5;
+      text-transform: uppercase;
+    }
+
+    .year {
+      font-size: 60px;
+      font-weight: 700;
+      line-height: 1;
+      transition: color 0.4s;
+    }
+
+    .temp-block {
+      text-align: right;
+    }
+
+    .temp-label {
+      font-size: 11px;
+      letter-spacing: 2px;
+      opacity: 0.5;
+      text-transform: uppercase;
+    }
+
+    .temp {
+      font-size: 38px;
+      font-weight: 700;
+      transition: color 0.6s ease;
+    }
+
+    /* ── GAS BARS ── */
+    .gas-section {
+      margin-top: 28px;
+    }
+
+    .gas {
+      margin-bottom: 20px;
+    }
+
+    .gas-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .gas-name {
+      font-size: 14px;
+      opacity: 0.85;
+    }
+
+    .gas-status {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      padding: 2px 10px;
+      border-radius: 20px;
+      transition: all 0.5s ease;
+    }
+
+    .status-low {
+      background: rgba(76, 209, 55, 0.15);
+      color: #4cd137;
+    }
+
+    .status-moderate {
+      background: rgba(255, 183, 3, 0.15);
+      color: #ffb703;
+    }
+
+    .status-high {
+      background: rgba(255, 120, 0, 0.15);
+      color: #ff7800;
+    }
+
+    .status-critical {
+      background: rgba(255, 60, 60, 0.15);
+      color: #ff3c3c;
+    }
+
+    .status-recovering {
+      background: rgba(0, 180, 255, 0.15);
+      color: #00b4ff;
+    }
+
+    .status-safe {
+      background: rgba(76, 209, 55, 0.15);
+      color: #4cd137;
+    }
+
+    .bar-track {
+      width: 100%;
+      height: 10px;
+      background: #1a2035;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 5px;
+      transition: width 1s ease, background 0.6s ease;
+    }
+
+    /* ── LOG ── */
+    .log {
+      font-family: "Cascadia Code", "Fira Code", monospace;
+      font-size: 13px;
+      opacity: 0.6;
+      margin-top: 16px;
+      line-height: 1.6;
+      min-height: 42px;
+    }
+
+    /* ── BUTTONS ── */
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 18px 16px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 14px;
+      border: none;
+      cursor: pointer;
+      color: white;
+      transition: all 0.35s ease;
+      letter-spacing: 0.5px;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn-deploy {
+      background: linear-gradient(135deg, #2962ff, #0039cb);
+      box-shadow: 0 4px 24px rgba(41, 98, 255, 0.35);
+    }
+
+    .btn-deploy:hover {
+      box-shadow: 0 4px 32px rgba(41, 98, 255, 0.55);
+    }
+
+    .btn-deploying {
+      background: linear-gradient(135deg, #ff8f00, #e65100);
+      box-shadow: 0 4px 24px rgba(255, 143, 0, 0.35);
+      pointer-events: none;
+      animation: pulse-glow 1s ease-in-out infinite;
+    }
+
+    .btn-reset {
+      background: linear-gradient(135deg, #00c853, #009624);
+      box-shadow: 0 4px 24px rgba(0, 200, 83, 0.35);
+    }
+
+    .btn-reset:hover {
+      box-shadow: 0 4px 32px rgba(0, 200, 83, 0.55);
+    }
+
+    .btn-pause {
+      background: linear-gradient(135deg, #444, #2a2a2a);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+      flex: 0 0 auto;
+      width: 140px;
+    }
+
+    .btn-pause:hover {
+      background: linear-gradient(135deg, #555, #333);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- VIDEO -->
+    <div class="video-panel">
+      <video id="video" autoplay muted>
+        <source id="videoSource" src="bad1.mp4" type="video/mp4">
+      </video>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="dashboard">
+      <div>
+        <!-- Phase Banner -->
+        <div class="phase-banner phase-degrading" id="phaseBanner">
+          ● CLIMATE DEGRADATION IN PROGRESS
+        </div>
+
+        <!-- Header -->
+        <div class="header">
+          <div>
+            <div class="year-label">Simulation Year</div>
+            <div class="year" id="year">2029</div>
+          </div>
+          <div class="temp-block">
+            <div class="temp-label">Global Temperature Anomaly</div>
+            <div class="temp" id="temp">+2.13°C</div>
+          </div>
+        </div>
+
+        <!-- Gas Bars -->
+        <div class="gas-section">
+          <div class="gas">
+            <div class="gas-header">
+              <span class="gas-name">Sulphur Hexafluoride (SF₆) & HFCs</span>
+              <span class="gas-status" id="s1">Low</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" id="b1" style="width:35%; background:linear-gradient(90deg,#ffb703,#ff8800)"></div>
+            </div>
+          </div>
+
+          <div class="gas">
+            <div class="gas-header">
+              <span class="gas-name">CFC-12 & Fossil Methane (CH₄)</span>
+              <span class="gas-status" id="s2">Rising</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" id="b2" style="width:55%; background:linear-gradient(90deg,#ffb703,#ff8800)"></div>
+            </div>
+          </div>
+
+          <div class="gas">
+            <div class="gas-header">
+              <span class="gas-name">Nitrous Oxide & CFC-12</span>
+              <span class="gas-status" id="s3">Steady</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" id="b3" style="width:40%; background:linear-gradient(90deg,#ffb703,#ff8800)"></div>
+            </div>
+          </div>
+
+          <div class="gas">
+            <div class="gas-header">
+              <span class="gas-name">HFC-23 & Carbon Dioxide (CO₂)</span>
+              <span class="gas-status" id="s4">High</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" id="b4" style="width:70%; background:linear-gradient(90deg,#ffb703,#ff8800)"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Log -->
+        <div class="log" id="log">&gt; 2029: Greenhouse gas levels rising steadily...</div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="btn-row" id="btnRow">
+        <button class="btn btn-pause" id="pauseBtn">⏸ Pause</button>
+        <button class="btn btn-deploy" id="actionBtn">🔴 Apply Breath Back Treatment</button>
+      </div>
+
+      <!-- Copyright -->
+      <div style="text-align:center; opacity:0.35; font-size:12px; margin-top:18px; letter-spacing:1.5px;">© VESCOP
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── Elements ──
+    const $ = id => document.getElementById(id);
+    const video = $("video");
+    const yearEl = $("year");
+    const tempEl = $("temp");
+    const logEl = $("log");
+    const actionBtn = $("actionBtn");
+    const pauseBtn = $("pauseBtn");
+    const banner = $("phaseBanner");
+
+    // ── State ──
+    let phase = "degrading"; // degrading | deploying | recovered
+    let paused = false;
+    let currentYear = 2029;
+    let simTimer = null;
+
+    // ── Helpers ──
+    function lerp(a, b, t) { return a + (b - a) * t; }
+
+    function getBarColor(widthPct) {
+      if (widthPct < 30) return "linear-gradient(90deg, #4cd137, #2ecc71)";
+      if (widthPct < 50) return "linear-gradient(90deg, #ffb703, #ff8800)";
+      if (widthPct < 75) return "linear-gradient(90deg, #ff7800, #e65100)";
+      return "linear-gradient(90deg, #ff4444, #cc0000)";
+    }
+
+    function getStatusClass(label) {
+      const map = {
+        "Low": "status-low", "Steady": "status-low", "Moderate": "status-moderate",
+        "Rising": "status-moderate", "Elevated": "status-moderate", "Climbing": "status-moderate",
+        "High": "status-high", "Very High": "status-high", "Severe": "status-high",
+        "Danger": "status-critical", "Critical": "status-critical", "Emergency": "status-critical",
+        "Extreme": "status-critical", "Runaway": "status-critical", "Collapse": "status-critical",
+        "Reducing": "status-recovering", "Declining": "status-recovering", "Stabilizing": "status-recovering",
+        "Capturing": "status-recovering", "Dropping": "status-recovering", "Decreasing": "status-recovering",
+        "Recovering": "status-recovering", "Filtering": "status-recovering",
+        "Neutralized": "status-safe", "Stabilized": "status-safe", "Captured": "status-safe"
+      };
+      return map[label] || "status-moderate";
+    }
+
+    // ── Degradation data ──
+    function getDegradation(year) {
+      const t = Math.min(1, (year - 2029) / 18);
+      return {
+        temp: lerp(2.13, 3.82, t),
+        bars: [lerp(35, 78, t), lerp(55, 92, t), lerp(40, 85, t), lerp(70, 98, t)],
+        statuses: [
+          t < 0.25 ? "Low" : t < 0.55 ? "Moderate" : t < 0.8 ? "High" : "Critical",
+          t < 0.2 ? "Rising" : t < 0.5 ? "Elevated" : t < 0.75 ? "Severe" : "Emergency",
+          t < 0.3 ? "Steady" : t < 0.6 ? "Climbing" : t < 0.85 ? "Danger" : "Collapse",
+          t < 0.15 ? "High" : t < 0.45 ? "Very High" : t < 0.7 ? "Extreme" : "Runaway",
+        ],
+        log: t < 0.2 ? `&gt; ${year}: Greenhouse gas levels rising steadily...`
+          : t < 0.4 ? `&gt; ${year}: Polar ice melt accelerating. Coral bleaching widespread.`
+            : t < 0.6 ? `&gt; ${year}: Extreme weather events surging. Food supply strained.`
+              : t < 0.8 ? `&gt; ${year}: Multiple tipping points crossed. Mass migration underway.`
+                : `&gt; ${year}: Ecosystem collapse imminent. Intervention urgently needed.`,
+        tempColor: `rgb(255,${Math.round(lerp(180, 50, t))},50)`
+      };
+    }
+
+    // ── Apply UI state ──
+    function applyDegradation(year) {
+      const d = getDegradation(year);
+      yearEl.innerText = year;
+      tempEl.innerText = `+${d.temp.toFixed(2)}°C`;
+      tempEl.style.color = d.tempColor;
+      logEl.innerHTML = d.log;
+
+      ["b1", "b2", "b3", "b4"].forEach((id, i) => {
+        const el = $(id);
+        el.style.width = d.bars[i] + "%";
+        el.style.background = getBarColor(d.bars[i]);
+      });
+
+      ["s1", "s2", "s3", "s4"].forEach((id, i) => {
+        const el = $(id);
+        el.innerText = d.statuses[i];
+        el.className = "gas-status " + getStatusClass(d.statuses[i]);
+      });
+    }
+
+    function applyRecoveryStep(data) {
+      tempEl.innerText = `+${data.temp.toFixed(2)}°C`;
+      tempEl.style.color = data.color;
+      logEl.innerHTML = data.log;
+
+      data.bars.forEach((w, i) => {
+        const el = $("b" + (i + 1));
+        el.style.width = w + "%";
+        el.style.background = getBarColor(w);
+      });
+
+      data.statuses.forEach((s, i) => {
+        const el = $("s" + (i + 1));
+        el.innerText = s;
+        el.className = "gas-status " + getStatusClass(s);
+      });
+    }
+
+    // ── Simulation tick ──
+    function tick() {
+      if (currentYear < 2047) {
+        currentYear++;
+        applyDegradation(currentYear);
+      } else {
+        logEl.innerHTML = `&gt; ${currentYear}: ⚠️ CRITICAL — Deploy intervention NOW!`;
+      }
+    }
+
+    // ── Phase: Start degradation ──
+    function startSimulation() {
+      phase = "degrading";
+      paused = false;
+      currentYear = 2029;
+
+      // Banner
+      banner.className = "phase-banner phase-degrading";
+      banner.innerText = "● CLIMATE DEGRADATION IN PROGRESS";
+
+      // Buttons
+      pauseBtn.classList.remove("hidden");
+      pauseBtn.innerText = "⏸ Pause";
+      actionBtn.className = "btn btn-deploy";
+      actionBtn.innerText = "🔴 Apply Breath Back Treatment";
+      actionBtn.onclick = deployAction;
+
+      applyDegradation(currentYear);
+
+      // Play bad1 then bad2
+      video.src = "bad1.mp4";
+      video.load();
+      video.play();
+      video.onended = () => {
+        if (phase === "degrading") {
+          video.src = "bad2.mp4";
+          video.load();
+          video.play();
+          video.onended = null; // bad2 just stops at end
+        }
+      };
+
+      simTimer = setInterval(tick, 889);
+    }
+
+    // ── Phase: Deploy (instant feedback!) ──
+    function deployAction() {
+      if (phase !== "degrading") return;
+      phase = "deploying";
+      clearInterval(simTimer);
+
+      // INSTANT button change
+      pauseBtn.classList.add("hidden");
+      actionBtn.className = "btn btn-deploying";
+      actionBtn.innerText = "⚡ Applying Treatment...";
+
+      // Banner change
+      banner.className = "phase-banner phase-deploying";
+      banner.innerText = "⚡ DEPLOYING INTERVENTION SYSTEMS";
+
+      // Switch to good1 then good2
+      video.onended = null;
+      video.src = "good1.mp4";
+      video.load();
+      video.play();
+      video.onended = () => {
+        video.src = "good2.mp4";
+        video.load();
+        video.play();
+        video.onended = null;
+      };
+
+      // 3-step animated recovery
+      const steps = [
+        {
+          delay: 2000,
+          bars: [25, 30, 28, 40],
+          statuses: ["Reducing", "Declining", "Stabilizing", "Capturing"],
+          temp: 2.8, color: "#e0a030",
+          log: "&gt; Plasma reactors activated. Decomposing SF₆ &amp; HFCs..."
+        },
+        {
+          delay: 7000,
+          bars: [18, 22, 20, 32],
+          statuses: ["Dropping", "Decreasing", "Recovering", "Filtering"],
+          temp: 2.3, color: "#c0c040",
+          log: "&gt; DAC units online. Atmospheric CO₂ extraction at scale...<br>&gt; Methane capture systems engaged."
+        },
+        {
+          delay: 12000,
+          bars: [10, 15, 18, 25],
+          statuses: ["Neutralized", "Declining", "Stabilized", "Captured"],
+          temp: 1.62, color: "#4cd137",
+          log: "&gt; Plasma reactors decomposing SF₆, HFCs.<br>&gt; DAC removing CO₂ &amp; CH₄.<br>&gt; Ecosystem recovery initiated. 🌱"
+        },
+      ];
+
+      steps.forEach(step => {
+        setTimeout(() => applyRecoveryStep(step), step.delay);
+      });
+
+      // Final state: recovered
+      setTimeout(() => {
+        phase = "recovered";
+
+        banner.className = "phase-banner phase-recovered";
+        banner.innerText = "✓ ECOSYSTEM RECOVERY UNDERWAY";
+
+        actionBtn.className = "btn btn-reset";
+        actionBtn.innerText = "🔄 Reset Simulation";
+        actionBtn.onclick = () => {
+          video.onended = null;
+          startSimulation();
+        };
+      }, 16000);
+    }
+
+    // ── Pause / Resume ──
+    pauseBtn.onclick = () => {
+      if (phase !== "degrading") return;
+      paused = !paused;
+      if (paused) {
+        clearInterval(simTimer);
+        pauseBtn.innerText = "▶ Resume";
+      } else {
+        pauseBtn.innerText = "⏸ Pause";
+        simTimer = setInterval(tick, 889);
+      }
+    };
+
+    // ── Boot ──
+    startSimulation();
+  </script>
+
+</body>
+
+</html>
